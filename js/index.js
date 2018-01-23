@@ -1,5 +1,7 @@
 var player = null;
 
+
+
 $(function(){
     player = createPlayer();
     player.on('ready',function(){
@@ -21,7 +23,29 @@ $(function(){
     })
 
     $('.submit').on('click',function(){
-        var source = $('.source').val();
+
+
+
+        var RPCClient = require('@alicloud/pop-core').RPCClient;
+
+        var client = new RPCClient({
+            accessKeyId: 'LTAIZhf3yzpDOf62',
+            accessKeySecret: 'EGF3URvUrCi84GjALIiGH0oa8e4Vkv',
+            endpoint: 'http://vod.cn-shanghai.aliyuncs.com',
+            apiVersion: '2017-03-21'
+        });
+        
+        // => returns Promise
+        var auth = client.request("GetVideoPlayAuth", {
+            VideoId: "ae6c9bf9a31747cabcff7b95529da065",
+            AuthInfoTimeout	: 3000,
+            Format: "JSON"
+        }).then(data => {
+            $('.playauth').val(data.PlayAuth);
+            $('.source').val('ae6c9bf9a31747cabcff7b95529da065');
+        });
+
+        var source = "http://vod.service-now.cn/sv/24ea6d41-1611d12b24c/24ea6d41-1611d12b24c.mp4";
         var playAuth = $('.playauth').val();
         if(!source)
         {
